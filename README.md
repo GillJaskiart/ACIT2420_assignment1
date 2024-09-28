@@ -39,7 +39,8 @@ In this tutorial, we will:
 - (Optional) Add a custom Arch Linux image using `doctl`.
 - Create a new droplet using the SSH key, `cloud-config` and the custom image file. 
 ## Step 1: SSH into your existing droplet
-Open your terminal and SSH into your existing droplet using the command `ssh <your hostname>`. ![[Screenshot 2024-09-27 at 2.37.09 PM.png]]
+Open your terminal and SSH into your existing droplet using the command `ssh <your hostname>`. 
+![](attachments/Screenshot%202024-09-27%20at%202.37.09%20PM.png)
 #### Trouble-shooting for `ssh` command
 If you are unable to use this command, create a config file in .ssh folder if you don't have it already. The content of config file is:
 ```
@@ -72,7 +73,7 @@ Make the adjustments to the **email address** before running the command.
 It will ask for a **passphrase**, you can press enter to skip this part (If you do use a passphrase, type something that you will remember).
 
 If you are able to create your key pair successfully, you will see an output like this. 
-![[Screenshot 2024-09-27 at 2.46.26 PM.png]]
+![](attachments/Screenshot%202024-09-27%20at%202.46.26%20PM.png)
 
 You will now have two plain text files `do-key` and `do-key.pub` in your `.ssh` folder. We will add the public key to the DigitalOcean account later. 
 ## Step 3: Install `Doctl`
@@ -84,8 +85,7 @@ sudo pacman -S doctl
 ```
 
 You should see an output like this.
-
-![[Screenshot 2024-09-27 at 3.11.13 PM.png]]
+![](attachments/Screenshot%202024-09-27%20at%203.11.13%20PM.png)
 ## Step 4: Create API token and authenticate it
 To Create API token, go to DigitalOcean website. In the left navigation panel, click on **API**, then click **Generate New Token**. 
 
@@ -98,17 +98,17 @@ doctl auth init
 You will be asked for the token. Paste the token and you will get connected to you DigitalOcean account.
 
 You should see this output upon successful completion of this step.
-![[Screenshot 2024-09-27 at 3.28.53 PM.png]]
+![](attachments/Screenshot%202024-09-27%20at%203.28.53%20PM.png)
 
 To confirm that you are authorized, run this command to get your account information.
 ```bash
 doctl account get
 ```
 This command will display information about your account. It should look like this.
-![[Screenshot 2024-09-27 at 3.32.12 PM.png]]
+![](attachments/Screenshot%202024-09-27%20at%203.32.12%20PM.png)
 
 You can now use `doctl` to communicate directly with DigitalOcean. You can create custom images, droplets and much more by only using the Command Line interface (CLI).
-## Step 4: (Optional) Create custom Arch Linux image and add to to the DigitalOcean account
+## Step 5: (Optional) Create custom Arch Linux image and add to to the DigitalOcean account
 You already have a custom Arch Linux image in you account (the one you used to make your first droplet). But you can also create our own **Arch Linux** image using `doctl`. 
 
 Use this command to create the image.
@@ -122,11 +122,11 @@ In this command,
 - We  specified the name of the distribution "Arch Linux"
 
 After running this command, you should see this output:
-![[Screenshot 2024-09-27 at 3.55.00 PM.png]]
+![](attachments/Screenshot%202024-09-27%20at%203.55.00%20PM.png)
 Note that, 
 - We get an **ID** for this image. This ID will be used to create a new droplet later.
 
-## Step 5: Upload SSH public key to DigitalOcean account
+## Step 6: Upload SSH public key to DigitalOcean account
 
 Remember that we created a ssh key pair and saved it in .ssh folder. There is a public key and a private key. You need to upload your private key to your DigitalOcean account. Do do that use the command:
 ```bash
@@ -135,9 +135,9 @@ doctl compute ssh-key import "key-name" --public-key-file ~/.ssh/do-key.pub
 Give a name to the key and make sure you use public key only. The public key end with `.pub`. 
 
 When you run this command successfully, you should see a similar output. 
-![[Screenshot 2024-09-27 at 4.59.40 PM.png]]
+![](attachments/Screenshot%202024-09-27%20at%204.59.40%20PM.png)
 We get an ID for our ssh key, which we will use to create our droplet.
-## Step 6: Make `cloud-init.yml` file
+## Step 7: Make `cloud-init.yml` file
 
 Before we create the `cloud-config.yml` file, we need to copy the ssh public key. Run this command to display your key.
 ```bash
@@ -197,7 +197,7 @@ This `cloud-config` file will:
 We disabled the root user because root is a known username and is commonly targeted by attackers using brute force attacks. Disabling it provides some extra security.
 
 If you completed this step, your `cloud-config.yml` file is ready. We can use it to create the droplet and automate the process.
-## Step 7: Create the droplet using `Doctl` and `cloud-config`
+## Step 8: Create the droplet using `Doctl` and `cloud-config`
 
 Before we run the command to create the new droplet, we have to get the IDs for the **custom image** and the **SSH key**.
 
@@ -212,7 +212,7 @@ doctl compute ssh-key list
 ```
 
 You should see an output containing IDs and names of the user created images and ssh keys on our account.
-![[Screenshot 2024-09-27 at 6.00.53 PM.png]]
+![](attachments/Screenshot%202024-09-27%20at%206.00.53%20PM.png)
 
 **Make sure that your custom image is uploaded successfully before you begin creating the droplet** (if it is pending, you will see an error in next step). 
 
@@ -235,11 +235,11 @@ In this command,
 - Type the path to your `cloud-config.yml` file (if you are running the command from the directory containing this file, you can just write the file name without the path)
 
 You should see an output like this:
-![[Screenshot 2024-09-27 at 6.06.35 PM.png]]
+![](attachments/Screenshot%202024-09-27%20at%206.06.35%20PM.png)
 
 Your new droplet is created.  
 
-## Step 8: Create `config` file inside `.ssh` directory
+## Step 9: Create `config` file inside `.ssh` directory
 
 Copy the public IPv4 address of your new droplet from the output of droplet creation.
 
@@ -262,4 +262,4 @@ Make the required changes to this config file, then save and exit `nvim`.
 
 You should now be able to connect to your new droplet using ssh command.
 
-![[Screenshot 2024-09-27 at 6.30.17 PM.png]]
+![](attachments/Screenshot%202024-09-27%20at%206.30.17%20PM.png)
