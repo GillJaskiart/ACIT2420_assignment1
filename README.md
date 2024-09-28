@@ -41,7 +41,7 @@ In this tutorial, we will:
 ## Step 1: SSH into your existing droplet
 Open your terminal and SSH into your existing droplet using the command `ssh <your hostname>`. ![[Screenshot 2024-09-27 at 2.37.09 PM.png]]
 #### Trouble-shooting for `ssh` command
-If you are unable to use this command, create a config file in .ssh folder if you don't have it already. The content of config file is
+If you are unable to use this command, create a config file in .ssh folder if you don't have it already. The content of config file is:
 ```
 Host arch
   HostName 143.198.140.15
@@ -51,7 +51,7 @@ Host arch
   StrictHostKeyChecking no
   UserKnownHostsFile /dev/null
 ```
-
+**Note**: You may need to use the hostname of your droplet and change the IP address to the address of your droplet. Also, make sure you are using the correct SSH key.
 ## Step 2: Create SSH key pair
 When you SSH into your droplet, you will be in the home directory by default, if you are not in home directory, use this command to go to home directory:
 ```terminal
@@ -128,7 +128,138 @@ Note that,
 
 ## Step 5: Upload SSH public key to DigitalOcean account
 
+Remember that we created a ssh key pair and saved it in .ssh folder. There is a public key and a private key. You need to upload your private key to your DigitalOcean account. Do do that use the command:
+```bash
+doctl compute ssh-key import "key-name" --public-key-file ~/.ssh/do-key.pub
+```
+Give a name to the key and make sure you use public key only. The public key end with `.pub`. 
 
+When you run this command successfully, you should see a similar output. 
+![[Screenshot 2024-09-27 at 4.59.40 PM.png]]
+We get an ID for our ssh key, which we will use to create our droplet.
 ## Step 6: Make `cloud-init.yml` file
+
+Before we create the `cloud-config.yml` file, we need to copy the ssh public key. Run this command to display your key.
+```bash
+cat do-key.pub
+```
+
+Then copy the key as we will paste it inside the `cloud-config` file.
+
+In the home directory of the droplet, create a `cloud-config.yml` file using:
+```bash
+nvim cloud-init.yml
+```
+
+You will enter `Neovim`, press **i** to enter insert mode. Then insert this inside the `cloud-config.yml` file.
+
+```yml
+#cloud-config
+
+users:
+- name: arch2
+	primary_group: arch2group
+	groups: wheel
+	sudo: ['ALL=(ALL) NOPASSWD:ALL']
+	shell: /bin/bash
+	ssh-authorized-keys:
+	- ssh-ed25519
+	<your public key>
+
+packages:
+	- git
+	- vim
+	- ripgrep
+	- rsync
+	- neovim
+	- fd
+	- less
+	- man-db
+	- bash-completion
+	- tmux
+
+runcmd:
+	- sed -i 's/^PermitRootLogin yes/PermitRootLogin no/' /etc/ssh sshd_config
+	- systemctl reload sshd
+```
+
+Inside the `ssh-authorized-keys:` section, paste your ssh public key.
+
+Press **Esc** to exit insert mode. Then type `:wq` to write and exit the file. If you made a mistake and do not want to save yet, type `:q!` to quit without saving.
+
+This `cloud-config` file will:
+- Create a regular user and adds the user to a group
+- Allows the user to run `sudo` commands
+- Install initial packages
+- Add a Public SSH key to new droplet's authorized keys
+- Disable root access
+
+We disabled the root user because root is a known username and is commonly targeted by attackers using brute force attacks. Disabling it provides some extra security.
+
+If you completed this step, your `cloud-config.yml` file is ready. We can use it to create the droplet and automate the process.
 ## Step 7: Create the droplet using `Doctl` and `cloud-config`
 
+Before we run the command to create the new droplet, we have to get the IDs for the **custom image** and the **SSH key**.
+
+First, we will get a list of images created by the user  in our account:
+```bash
+doctl compute image list-user
+```
+
+Next, we will get a list of our SSH keys:
+```bash
+doctl compute ssh-key list
+```
+
+You should see an output containing IDs and names of the user created images and ssh keys on our account.
+![[Screenshot 2024-09-27 at 6.00.53 PM.png]]
+
+**Make sure that your custom image is uploaded successfully before you begin creating the droplet** (if it is pending, you will see an error in next step). 
+
+Create the new droplet by running the command:
+```bash
+doctl compute droplet create "droplet-name" \
+  --region sfo3 \
+  --image <YOUR_IMAGE_ID> \
+  --size s-1vcpu-1gb-amd \
+  --ssh-keys <YOUR_SSH_KEY_ID> \
+  --user-data-file ~/cloud-config.yml \
+  --wait
+```
+In this command,
+- Name you droplet
+- Use `sfo3` for selecting San Francisco Datacenter 3 region
+- Enter the ID of your image (copy from the output of the previous command)
+- `s-1vcpu-1gb-amd` to get AMD 1 GB CPU and 25 GB Disk space
+- Enter the ID of your SSH key
+- Type the path to your `cloud-config.yml` file (if you are running the command from the directory containing this file, you can just write the file name without the path)
+
+You should see an output like this:
+![[Screenshot 2024-09-27 at 6.06.35 PM.png]]
+
+Your new droplet is created.  
+
+## Step 8: Create `config` file inside `.ssh` directory
+
+Copy the public IPv4 address of your new droplet from the output of droplet creation.
+
+Create a `config` file inside `.ssh` directory:
+```bash
+nvim ~/.ssh/config
+```
+
+You will enter `Neovim`, press **i** to enter insert mode and paste this inside the config file:
+```config
+Host <username you used in cloud-config file>
+	HostName <IPv4 address>
+	User <username>
+	PreferredAuthentications publickey
+	IdentityFile ~/.ssh/do-key
+	StrictHostKeyChecking no
+	UserKnownHostsFile /dev/null
+```
+Make the required changes to this config file, then save and exit `nvim`.
+
+You should now be able to connect to your new droplet using ssh command.
+
+![[Screenshot 2024-09-27 at 6.30.17 PM.png]]
