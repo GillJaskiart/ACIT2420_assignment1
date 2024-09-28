@@ -5,17 +5,11 @@ Name: Jaskirat Gill
 Student ID: A01349758
 ## Introduction and general information
 ### What is SSH?
-SSH (Secure Shell) is a cryptographic network protocol used to securely access and manage remote devices over a network. It provides secure encrypted communications between two untrusted hosts, often employed for remote login, file transfers, and network services, replacing older, less secure protocols like Telnet and FTP. SSH ensures data integrity and confidentiality over unsecured networks such as the internet.
-
-Ylonen, T., & Lonvick, C. (2006). **The Secure Shell (SSH) protocol architecture**. IETF. https://datatracker.ietf.org/doc/html/rfc4251 
+SSH (Secure Shell) is a cryptographic network protocol used to securely access and manage remote devices over a network. It provides secure encrypted communications between two untrusted hosts, often employed for remote login, file transfers, and network services, replacing older, less secure protocols like Telnet and FTP. SSH ensures data integrity and confidentiality over unsecured networks such as the internet `(Ylonen & Lonvick, 2006)`.
 ### What is `Doctl`?
-**doctl** is a command-line interface (CLI) tool used to interact with DigitalOcean’s API. It allows users to manage their DigitalOcean cloud resources, such as creating and managing Droplets (virtual machines), networking, and storage, without needing to use the DigitalOcean web interface. The tool enables automation and easier integration with scripts and CI/CD pipelines, facilitating cloud infrastructure management for developers and sysadmins.
-
-DigitalOcean. (n.d.). **doctl command line tool**. DigitalOcean Documentation. https://docs.digitalocean.com/reference/doctl/
+**doctl** is a command-line interface (CLI) tool used to interact with DigitalOcean’s API. It allows users to manage their DigitalOcean cloud resources, such as creating and managing Droplets (virtual machines), networking, and storage, without needing to use the DigitalOcean web interface. The tool enables automation and easier integration with scripts and CI/CD pipelines, facilitating cloud infrastructure management for developers and sysadmins `(DigitalOcean, n.d.)`.
 ### What is a `cloud-init` file?
-**cloud-init** is a widely used tool for initializing cloud instances at boot time. It allows the configuration of a virtual machine or cloud instance during its first boot by passing user data, such as scripts or configuration files. cloud-init can set up user accounts, configure networking, install software, and perform other instance customizations, making it crucial for automating cloud infrastructure.
-
-Canonical Ltd. (n.d.). **Cloud-init: The standard for cloud instance initialization**. https://cloud-init.io/
+**cloud-init** is a widely used tool for initializing cloud instances at boot time. It allows the configuration of a virtual machine or cloud instance during its first boot by passing user data, such as scripts or configuration files. cloud-init can set up user accounts, configure networking, install software, and perform other instance customizations, making it crucial for automating cloud infrastructure `(Canonical Ltd., n.d.)`.
 
 ## Recap
 - You already have a DigitalOcean account and an Arch Linux droplet that you created using the website. 
@@ -263,3 +257,11 @@ Make the required changes to this config file, then save and exit `nvim`.
 You should now be able to connect to your new droplet using ssh command.
 
 ![](attachments/Screenshot%202024-09-27%20at%206.30.17%20PM.png)
+
+## References:
+
+DigitalOcean. (n.d.). _doctl_. DigitalOcean Documentation. Retrieved September 27, 2024, from https://docs.digitalocean.com/reference/doctl/
+
+Ylonen, T., & Lonvick, C. (2006). **The Secure Shell (SSH) protocol architecture**. IETF. https://datatracker.ietf.org/doc/html/rfc4251 
+
+Canonical Ltd. (n.d.). **Cloud-init: The standard for cloud instance initialization**. https://cloud-init.io/
