@@ -34,7 +34,7 @@ In this tutorial, we will:
 - Create a new droplet using the SSH key, `cloud-config` and the custom image file. 
 ## Step 1: SSH into your existing droplet
 Open your terminal and SSH into your existing droplet using the command `ssh <your hostname>`. 
-![](attachments/Screenshot%202024-09-27%20at%202.37.09%20PM.png)
+![](assets/Screenshot%202024-09-27%20at%202.37.09%20PM.png)
 #### Trouble-shooting for `ssh` command
 If you are unable to use this command, create a config file in .ssh folder if you don't have it already. The content of config file is:
 ```
@@ -67,7 +67,7 @@ Make the adjustments to the **email address** before running the command.
 It will ask for a **passphrase**, you can press enter to skip this part (If you do use a passphrase, type something that you will remember).
 
 If you are able to create your key pair successfully, you will see an output like this. 
-![](attachments/Screenshot%202024-09-27%20at%202.46.26%20PM.png)
+![](assets/Screenshot%202024-09-27%20at%202.46.26%20PM.png)
 
 You will now have two plain text files `do-key` and `do-key.pub` in your `.ssh` folder. We will add the public key to the DigitalOcean account later. 
 ## Step 3: Install `Doctl`
@@ -79,7 +79,7 @@ sudo pacman -S doctl
 ```
 
 You should see an output like this.
-![](attachments/Screenshot%202024-09-27%20at%203.11.13%20PM.png)
+![](assets/Screenshot%202024-09-27%20at%203.11.13%20PM.png)
 ## Step 4: Create API token and authenticate it
 To Create API token, go to DigitalOcean website. In the left navigation panel, click on **API**, then click **Generate New Token**. 
 
@@ -92,14 +92,14 @@ doctl auth init
 You will be asked for the token. Paste the token and you will get connected to you DigitalOcean account.
 
 You should see this output upon successful completion of this step.
-![](attachments/Screenshot%202024-09-27%20at%203.28.53%20PM.png)
+![](assets/Screenshot%202024-09-27%20at%203.28.53%20PM.png)
 
 To confirm that you are authorized, run this command to get your account information.
 ```bash
 doctl account get
 ```
 This command will display information about your account. It should look like this.
-![](attachments/Screenshot%202024-09-27%20at%203.32.12%20PM.png)
+![](assets/Screenshot%202024-09-27%20at%203.32.12%20PM.png)
 
 You can now use `doctl` to communicate directly with DigitalOcean. You can create custom images, droplets and much more by only using the Command Line interface (CLI).
 ## Step 5: (Optional) Create custom Arch Linux image and add to to the DigitalOcean account
@@ -116,7 +116,7 @@ In this command,
 - We  specified the name of the distribution "Arch Linux"
 
 After running this command, you should see this output:
-![](attachments/Screenshot%202024-09-27%20at%203.55.00%20PM.png)
+![](assets/Screenshot%202024-09-27%20at%203.55.00%20PM.png)
 Note that, 
 - We get an **ID** for this image. This ID will be used to create a new droplet later.
 
@@ -129,7 +129,7 @@ doctl compute ssh-key import "key-name" --public-key-file ~/.ssh/do-key.pub
 Give a name to the key and make sure you use public key only. The public key end with `.pub`. 
 
 When you run this command successfully, you should see a similar output. 
-![](attachments/Screenshot%202024-09-27%20at%204.59.40%20PM.png)
+![](assets/Screenshot%202024-09-27%20at%204.59.40%20PM.png)
 We get an ID for our ssh key, which we will use to create our droplet.
 ## Step 7: Make `cloud-init.yml` file
 
@@ -206,7 +206,7 @@ doctl compute ssh-key list
 ```
 
 You should see an output containing IDs and names of the user created images and ssh keys on our account.
-![](attachments/Screenshot%202024-09-27%20at%206.00.53%20PM.png)
+![](assets/Screenshot%202024-09-27%20at%206.00.53%20PM.png)
 
 **Make sure that your custom image is uploaded successfully before you begin creating the droplet** (if it is pending, you will see an error in next step). 
 
@@ -229,7 +229,7 @@ In this command,
 - Type the path to your `cloud-config.yml` file (if you are running the command from the directory containing this file, you can just write the file name without the path)
 
 You should see an output like this:
-![](attachments/Screenshot%202024-09-27%20at%206.06.35%20PM.png)
+![](assets/Screenshot%202024-09-27%20at%206.06.35%20PM.png)
 
 Your new droplet is created.  
 
@@ -256,7 +256,7 @@ Make the required changes to this config file, then save and exit `nvim`.
 
 You should now be able to connect to your new droplet using ssh command.
 
-![](attachments/Screenshot%202024-09-27%20at%206.30.17%20PM.png)
+![](assets/Screenshot%202024-09-27%20at%206.30.17%20PM.png)
 
 ## References:
 
